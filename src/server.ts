@@ -38,9 +38,13 @@ import fs from 'fs';
     //res.send("try GET /filteredimage?image_url={{}}")
     let { image_url } = req.query;
 
-    filterImageFromURL(image_url)
-      .then(function(image) {
+    await filterImageFromURL(image_url)
+      .then((image) => {
         fs.readFile(image, (err, data) => {
+          if(err) {
+            res.status(422).send("Error processing the file.");
+          }
+          
           res.writeHead(200, {'Content-Type': 'image/jpeg'});
           res.end(data);
           deleteLocalFiles(new Array(image));
