@@ -34,8 +34,11 @@ import fs from 'fs';
   
   // Root Endpoint
   // Displays a simple message to the user
-  app.get( "/", async ( req, res ) => {
-    //res.send("try GET /filteredimage?image_url={{}}")
+  app.get("/", async ( req, res ) => {
+    res.send("try GET /filteredimage?image_url={{}}")        
+  });
+
+  app.get("/filteredimage", async (req, res) => {
     let { image_url } = req.query;
 
     await filterImageFromURL(image_url)
@@ -49,8 +52,11 @@ import fs from 'fs';
           res.end(data);
           deleteLocalFiles(new Array(image));
         });              
+      })
+      .catch(error => {
+        res.status(500).send("Error filtering the image file.")
       });
-  } );
+  });  
   
 
   // Start the Server
